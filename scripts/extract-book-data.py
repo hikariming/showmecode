@@ -24,14 +24,26 @@ PARTS = [
 ]
 
 
+# CJK Radicals Supplement (U+2E80-U+2EFF) — NFKC does NOT decompose this block,
+# so map the artifacts this PDF actually emits.
+_CJK_SUPPLEMENT_MAP = {
+    "⻚": "页", "⻓": "长", "⻥": "鱼",
+    "⻔": "门", "⻜": "飞", "⻅": "见",
+}
+
+# Document-specific Kangxi quirk: this PDF emits ⽹ (U+2F75 KANGXI RADICAL BAMBOO)
+# in places where 章 was intended (e.g. "本⽵作者" → "本章作者"). Apply BEFORE NFKC
+# so we don't have to touch the post-NFKC form 竹 (which would corrupt genuine bamboo).
+_PRE_NFKC_MAP = {"⽵": "章"}
+
+
 def normalize(text: str) -> str:
-    # PDF often has \x01 control chars between glyphs and a stray U+FF65 etc.
     text = text.replace("\x01", "").replace("\x00", "")
-    # NFKC resolves most Kangxi radical variants to their standard CJK equivalents.
+    for src, dst in _PRE_NFKC_MAP.items():
+        text = text.replace(src, dst)
+    for src, dst in _CJK_SUPPLEMENT_MAP.items():
+        text = text.replace(src, dst)
     text = unicodedata.normalize("NFKC", text)
-    # Explicit overrides: NFKC maps ⽹ (bamboo, U+2F75) → 竹 and ⽹ (net, U+2F39) → 网,
-    # but both should be 章 in this document's context.
-    text = text.replace("竹", "章").replace("网", "章")
     return re.sub(r"[ \t]+", " ", text)
 
 
