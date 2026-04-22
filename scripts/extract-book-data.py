@@ -4,6 +4,7 @@
 Output is a draft for human curation — never imported by the app."""
 import json
 import re
+import unicodedata
 from pathlib import Path
 from pypdf import PdfReader
 
@@ -26,7 +27,11 @@ PARTS = [
 def normalize(text: str) -> str:
     # PDF often has \x01 control chars between glyphs and a stray U+FF65 etc.
     text = text.replace("\x01", "").replace("\x00", "")
-    text = text.replace("⼼", "心").replace("⽅", "方").replace("⾏", "行").replace("⽵", "章")
+    # NFKC resolves most Kangxi radical variants to their standard CJK equivalents.
+    text = unicodedata.normalize("NFKC", text)
+    # Explicit overrides: NFKC maps ⽹ (bamboo, U+2F75) → 竹 and ⽹ (net, U+2F39) → 网,
+    # but both should be 章 in this document's context.
+    text = text.replace("竹", "章").replace("网", "章")
     return re.sub(r"[ \t]+", " ", text)
 
 
@@ -43,6 +48,12 @@ def grab_block(text: str, start_marker: str, end_markers: list[str]) -> str:
     return body[:cut].strip()
 
 
+def strip_leading_author_block(text: str) -> str:
+    # Remove author byline whether it appears at the leading position (Part 8)
+    # or embedded mid-text (Parts 6/7, where it splits the pain paragraph).
+    return re.sub(r"本章作者[：:][^\n]+\n[^\n]+\n?", "", text).strip()
+
+
 def main() -> None:
     reader = PdfReader(str(PDF))
     out = []
@@ -54,16 +65,16 @@ def main() -> None:
             chunk += "\n"
 
         author_match = re.search(r"本章作者[：:]\s*([^\n]{2,40})", chunk)
-        author_title_match = None
+        author_title = ""
         if author_match:
             after = chunk.split(author_match.group(0), 1)[1]
-            author_title_match = next((l.strip() for l in after.split("\n") if l.strip()), "")
+            author_title = next((line.strip() for line in after.split("\n") if line.strip()), "")
 
         part_data = {
             **p,
             "author": author_match.group(1).strip() if author_match else "",
-            "authorTitle": author_title_match or "",
-            "pain":     grab_block(chunk, "[核心痛点]",   ["[解决方案]", "[关键行动]"]),
+            "authorTitle": author_title,
+            "pain":     strip_leading_author_block(grab_block(chunk, "[核心痛点]",   ["[解决方案]", "[关键行动]"])),
             "solution": grab_block(chunk, "[解决方案]",   ["[关键行动]", "本章作者"]),
             "actions":  grab_block(chunk, "[关键行动]",   ["本章作者", "一、", "1."]),
         }
