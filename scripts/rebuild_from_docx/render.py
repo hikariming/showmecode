@@ -1,4 +1,5 @@
 """Walk a chapter's body elements, emit final markdown."""
+import re
 from pathlib import Path
 from typing import Iterable
 
@@ -18,6 +19,12 @@ from .tables import (
 )
 
 FRONT_MATTER_MARKER = "本章作者"
+
+_WS_RE = re.compile(r"\s+")
+
+
+def _normalize_text(s: str) -> str:
+    return _WS_RE.sub("", s)
 
 
 def _has_drawing(p: Paragraph) -> bool:
@@ -39,6 +46,11 @@ def render_chapter(
     """
     anchors = load_anchors(anchors_md)
     anchor_lookup = {text: lvl for text, lvl in anchors}
+    # Normalize anchor keys by collapsing all whitespace to "" — guards against
+    # drift like "AI 是乙方" (docx) vs "AI是乙方" (.md anchor).
+    anchor_lookup_normalized = {
+        _normalize_text(text): (text, lvl) for text, lvl in anchors
+    }
     seen_front_matter = False
     table_index = 0
     out: list[str] = []
@@ -53,12 +65,12 @@ def render_chapter(
     for el in body_elements:
         if isinstance(el, Paragraph):
             text = el.text.strip()
-            if text in anchor_lookup:
-                lvl = anchor_lookup[text]
+            norm = _normalize_text(text)
+            if norm in anchor_lookup_normalized:
+                canonical_text, lvl = anchor_lookup_normalized[norm]
                 if lvl == 1:
-                    # Already emitted up front, skip duplicate
-                    continue
-                out.append(f"{'#' * lvl} {text}")
+                    continue  # already emitted up front
+                out.append(f"{'#' * lvl} {canonical_text}")
                 continue
             if doc is not None and _has_drawing(el):
                 refs = extract_drawings_from_paragraph(el, doc, images_dir, slug)

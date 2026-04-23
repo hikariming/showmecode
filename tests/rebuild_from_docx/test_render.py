@@ -90,6 +90,20 @@ def test_h2_emitted_in_body_position_not_at_top(anchor_md, tmp_path):
     assert lines[5] == "body of second"
 
 
+def test_anchor_match_tolerates_whitespace_drift(anchor_md, tmp_path):
+    """Whitespace differences between .md anchor text and docx paragraph text
+    must not silently drop the heading. The anchor's wording wins (it's the
+    peer-reviewed source of truth)."""
+    md = anchor_md([("AI是乙方", 3)])
+    doc = Document()
+    doc.add_paragraph("AI 是乙方")  # extra space
+    body = list(_iter_body_for_test(doc))
+    out_imgs = tmp_path / "imgs"; out_imgs.mkdir()
+    result = render_chapter(body, md, "x", out_imgs)
+    assert "### AI是乙方" in result
+    assert "AI 是乙方" not in result  # drift wording must NOT appear
+
+
 def _iter_body_for_test(doc):
     """Mirror slicer's body-iteration so tests can hand a chapter slice to render_chapter."""
     from docx.oxml.ns import qn
