@@ -12,7 +12,7 @@ export const navItems: NavItem[] = [
   { label: "全部篇章", href: "/#chapters" },
   { label: "学习路径", href: "/#path" },
   { label: "关于本书", href: "/#about" },
-  { label: "GitHub",  href: "#" }, // TODO: replace with real repo URL
+  { label: "GitHub",  href: "https://github.com/hikariming/showmecode" },
 ];
 
 export const footerGroups: FooterGroup[] = [
@@ -35,7 +35,7 @@ export const footerGroups: FooterGroup[] = [
     title: "其它",
     links: [
       { label: "回到顶部", href: "#top" },
-      { label: "GitHub",   href: "#" }, // TODO: replace with real repo URL
+      { label: "GitHub",   href: "https://github.com/hikariming/showmecode" },
     ],
   },
 ];

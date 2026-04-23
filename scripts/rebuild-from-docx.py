@@ -25,6 +25,7 @@ DATA_DIR = REPO / "data" / "book"
 IMG_ROOT = REPO / "public" / "book"
 
 SLUGS = {
+    0: "intro",
     1: "cognition",
     2: "setup",
     3: "mvp",

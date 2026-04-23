@@ -77,12 +77,15 @@ export function Header() {
           {navItems.map((item) => {
             const isActive =
               item.href === activeHash || item.href === `/${activeHash}`;
+            const external = /^https?:\/\//.test(item.href);
 
             return (
               <Link
                 key={`${item.label}-${item.href}`}
                 href={item.href}
-                onClick={() => setActiveHash(item.href)}
+                onClick={() => !external && setActiveHash(item.href)}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
                 className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
                   isActive ? "bg-brand-soft text-brand" : "text-foreground/86 hover:bg-slate-50"
                 }`}

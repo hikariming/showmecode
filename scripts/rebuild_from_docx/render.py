@@ -68,11 +68,6 @@ def render_chapter(
             if norm in anchor_lookup_normalized:
                 canonical_text, lvl = anchor_lookup_normalized[norm]
                 matched_anchors.add(canonical_text)
-                # Only emit H2/H3 anchors in-place; H1s from the anchor file are
-                # skipped entirely to avoid circular drift (body content rendered
-                # as H1 markdown gets re-collected as anchors on subsequent runs).
-                if lvl == 1:
-                    continue
                 out.append(f"{'#' * lvl} {canonical_text}")
                 continue
             if doc is not None and _has_drawing(el):
@@ -109,7 +104,7 @@ def render_chapter(
                 out.append(rendered)
 
     for text, lvl in anchors:
-        if lvl == 1 or text in matched_anchors:
+        if text in matched_anchors:
             continue
         print(f"[WARN] {slug}: anchor not found in docx — H{lvl} {text!r}", file=sys.stderr)
 

@@ -24,9 +24,13 @@ def _iter_body(doc: Document) -> Iterable[BodyElement]:
 
 
 def slice_by_part(doc: Document) -> dict[int, list[BodyElement]]:
-    """Return {part_number: [body elements between this marker and the next]}."""
-    chapters: dict[int, list[BodyElement]] = {}
-    current: int | None = None
+    """Return {part_number: [body elements between this marker and the next]}.
+
+    Elements appearing before the first `第N部分：` marker are stored under key 0
+    (the intro/引言 section).
+    """
+    chapters: dict[int, list[BodyElement]] = {0: []}
+    current: int = 0
     for el in _iter_body(doc):
         text = el.text.strip() if isinstance(el, Paragraph) else ""
         m = PART_RE.match(text)
@@ -34,6 +38,5 @@ def slice_by_part(doc: Document) -> dict[int, list[BodyElement]]:
             current = NUM_MAP[m.group(1)]
             chapters[current] = []
             continue
-        if current is not None:
-            chapters[current].append(el)
+        chapters[current].append(el)
     return chapters

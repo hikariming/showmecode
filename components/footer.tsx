@@ -31,16 +31,21 @@ export function Footer() {
                   {group.title}
                 </h3>
                 <ul className="mt-5 space-y-4">
-                  {group.links.map((link) => (
-                    <li key={link.label}>
-                      <Link
-                        href={link.href}
-                        className="text-base text-muted transition hover:text-brand"
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  ))}
+                  {group.links.map((link) => {
+                    const external = /^https?:\/\//.test(link.href);
+                    return (
+                      <li key={link.label}>
+                        <Link
+                          href={link.href}
+                          target={external ? "_blank" : undefined}
+                          rel={external ? "noopener noreferrer" : undefined}
+                          className="text-base text-muted transition hover:text-brand"
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
