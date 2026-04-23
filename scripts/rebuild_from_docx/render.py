@@ -20,10 +20,15 @@ from .tables import (
 
 FRONT_MATTER_MARKER = "本章作者"
 
+# Strip leading numbering like "1. ", "2、", "3、 ", etc., before comparing.
+# These prefixes appear in the docx body but were stripped from the peer-reviewed .md anchors.
+_LEADING_NUM_RE = re.compile(r"^\s*\d+\s*[.、]\s*")
 _WS_RE = re.compile(r"\s+")
 
 
 def _normalize_text(s: str) -> str:
+    """Normalize for anchor matching: strip leading numbering, then collapse whitespace."""
+    s = _LEADING_NUM_RE.sub("", s)
     return _WS_RE.sub("", s)
 
 

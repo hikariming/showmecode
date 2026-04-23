@@ -104,6 +104,31 @@ def test_anchor_match_tolerates_whitespace_drift(anchor_md, tmp_path):
     assert "AI 是乙方" not in result  # drift wording must NOT appear
 
 
+def test_anchor_match_strips_arabic_numbering(anchor_md, tmp_path):
+    """docx body says '1. 言出法随', .md anchor says '言出法随' — should match."""
+    md = anchor_md([("言出法随", 2)])
+    doc = Document()
+    doc.add_paragraph("1. 言出法随")
+    body = list(_iter_body_for_test(doc))
+    out_imgs = tmp_path / "imgs"; out_imgs.mkdir()
+    result = render_chapter(body, md, "x", out_imgs)
+    assert "## 言出法随" in result
+    # docx wording must NOT appear
+    assert "1. 言出法随" not in result
+
+
+def test_anchor_match_strips_chinese_numbering(anchor_md, tmp_path):
+    """docx body says '2、总结', .md anchor says '总结' — should match."""
+    md = anchor_md([("总结", 2)])
+    doc = Document()
+    doc.add_paragraph("2、总结")
+    body = list(_iter_body_for_test(doc))
+    out_imgs = tmp_path / "imgs"; out_imgs.mkdir()
+    result = render_chapter(body, md, "x", out_imgs)
+    assert "## 总结" in result
+    assert "2、总结" not in result
+
+
 def _iter_body_for_test(doc):
     """Mirror slicer's body-iteration so tests can hand a chapter slice to render_chapter."""
     from docx.oxml.ns import qn
