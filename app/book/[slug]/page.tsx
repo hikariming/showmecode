@@ -9,8 +9,9 @@ export function generateStaticParams() {
   return bookParts.map((part) => ({ slug: part.slug }));
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const part = bookParts.find((p) => p.slug === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const part = bookParts.find((p) => p.slug === slug);
   if (!part) return {};
   return {
     title: `第 ${part.number} 篇 ${part.name} - ${part.fullTitle} | 赤脚程序员实战手册`,
@@ -18,8 +19,9 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   };
 }
 
-export default function BookPartPage({ params }: { params: { slug: string } }) {
-  const part = bookParts.find((p) => p.slug === params.slug);
+export default async function BookPartPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const part = bookParts.find((p) => p.slug === slug);
   if (!part) notFound();
   return (
     <>
