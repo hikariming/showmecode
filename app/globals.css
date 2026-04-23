@@ -80,7 +80,7 @@ input {
 }
 
 .section-space {
-  padding-block: 72px;
+  padding-block: 48px;
 }
 
 .glass-surface {
@@ -176,7 +176,7 @@ input {
   }
 
   .section-space {
-    padding-block: 88px;
+    padding-block: 60px;
   }
 }
 
@@ -186,6 +186,6 @@ input {
   }
 
   .section-space {
-    padding-block: 104px;
+    padding-block: 72px;
   }
 }
