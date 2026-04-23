@@ -5,10 +5,12 @@ import { useEffect, useMemo, useState } from "react";
 
 import { ArrowRightIcon, SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/logo";
+import { SearchDialog } from "@/components/search-dialog";
 import { navItems } from "@/data/homepage";
 
 export function Header() {
   const [activeHash, setActiveHash] = useState<string>(navItems[0]?.href ?? "#top");
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const observedIds = useMemo(
     () =>
@@ -66,6 +68,18 @@ export function Header() {
     };
   }, [observedIds]);
 
+  // Global Ctrl/Cmd+K to open search.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-white/86 backdrop-blur-xl">
       <div className="page-shell flex h-14 items-center gap-4">
@@ -99,6 +113,7 @@ export function Header() {
         <div className="ml-auto hidden items-center gap-4 md:flex">
           <button
             type="button"
+            onClick={() => setSearchOpen(true)}
             aria-label="搜索教程、项目和工具"
             className="glass-surface soft-ring flex h-9 min-w-[280px] items-center gap-2.5 rounded-xl px-3 text-left text-xs text-muted transition hover:border-brand/30 hover:text-foreground"
           >
@@ -110,7 +125,7 @@ export function Header() {
           </button>
 
           <Link
-            href="#chapters"
+            href="/book/intro"
             className="inline-flex h-9 items-center gap-1.5 rounded-xl bg-brand px-4 text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:bg-brand-strong"
           >
             开始学习
@@ -119,12 +134,13 @@ export function Header() {
         </div>
 
         <Link
-          href="#chapters"
+          href="/book/intro"
           className="ml-auto inline-flex h-9 items-center rounded-xl bg-brand px-3.5 text-xs font-semibold text-white transition hover:bg-brand-strong md:hidden"
         >
           开始学习
         </Link>
       </div>
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

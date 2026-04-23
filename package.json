@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/build-search-index.mjs && next build --webpack",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build:search-index": "node scripts/build-search-index.mjs"
   },
   "dependencies": {
     "github-slugger": "^2.0.0",
+    "minisearch": "^7.2.0",
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",

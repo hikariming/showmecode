@@ -14,10 +14,11 @@ export function Hero() {
               免费文档教程网站
             </div>
 
-            <h1 className="fade-up mt-7 text-[3.2rem] font-semibold leading-[0.94] tracking-[-0.085em] text-foreground sm:text-[4.55rem] lg:text-[5.4rem]">
-              学习 <span className="text-brand">VibeCoding</span>
-              <br />
-              设计你自己的产品
+            <h1 className="fade-up mt-7 text-[2.9rem] font-semibold leading-[0.96] tracking-[-0.07em] text-foreground sm:text-[3.9rem] lg:text-[4.6rem]">
+              <span className="block lg:whitespace-nowrap">
+                学习 <span className="text-brand">VibeCoding</span>
+              </span>
+              <span className="block">设计你自己的产品</span>
             </h1>
 
             <p
@@ -33,14 +34,14 @@ export function Hero() {
               style={{ animationDelay: "220ms" }}
             >
               <Link
-                href="#chapters"
+                href="/book/intro"
                 className="inline-flex h-14 items-center justify-center gap-3 rounded-[20px] bg-brand px-8 text-[1.05rem] font-semibold text-white shadow-[0_20px_40px_rgba(31,94,255,0.22)] transition hover:-translate-y-0.5 hover:bg-brand-strong"
               >
                 免费开始学习
                 <ArrowRightIcon className="h-5 w-5" />
               </Link>
               <Link
-                href="#values"
+                href="#chapters"
                 className="inline-flex h-14 items-center justify-center rounded-[20px] border border-line-strong bg-white/90 px-8 text-[1.05rem] font-semibold text-foreground transition hover:border-brand/40 hover:text-brand"
               >
                 浏览全部教程

@@ -5,7 +5,7 @@ import { ArrowRightIcon, QuoteMarkIcon } from "@/components/icons";
 
 export function IntroBand() {
   return (
-    <section className="section-space pt-0">
+    <section id="intro" className="section-space scroll-mt-24 pt-0">
       <div className="page-shell">
         <Link
           href="/book/intro"
