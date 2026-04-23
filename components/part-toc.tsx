@@ -2,22 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import GithubSlugger from "github-slugger";
-
-export type TocItem = { id: string; text: string };
-
-/** Extract H2 list from raw markdown using same slugger as rehype-slug. */
-export function extractToc(markdown: string): TocItem[] {
-  const slugger = new GithubSlugger();
-  const items: TocItem[] = [];
-  for (const line of markdown.split("\n")) {
-    const m = line.match(/^##\s+(.+?)\s*$/);
-    if (!m) continue;
-    const text = m[1].replace(/[#*`]/g, "").trim();
-    items.push({ id: slugger.slug(text), text });
-  }
-  return items;
-}
+import type { TocItem } from "@/lib/book-content";
 
 export function PartToc({ items }: { items: TocItem[] }) {
   const [activeId, setActiveId] = useState<string>(items[0]?.id ?? "");
