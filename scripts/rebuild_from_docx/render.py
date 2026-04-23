@@ -1,5 +1,6 @@
 """Walk a chapter's body elements, emit final markdown."""
 import re
+import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -50,12 +51,12 @@ def render_chapter(
     images are skipped (used by tests that don't set up image relationships).
     """
     anchors = load_anchors(anchors_md)
-    anchor_lookup = {text: lvl for text, lvl in anchors}
-    # Normalize anchor keys by collapsing all whitespace to "" — guards against
-    # drift like "AI 是乙方" (docx) vs "AI是乙方" (.md anchor).
+    # Normalize anchor keys by collapsing whitespace and stripping leading numbering
+    # — guards against drift like "AI 是乙方" / "1. 言出法随" between docx and .md.
     anchor_lookup_normalized = {
         _normalize_text(text): (text, lvl) for text, lvl in anchors
     }
+    matched_anchors: set[str] = set()
     seen_front_matter = False
     table_index = 0
     out: list[str] = []
@@ -73,6 +74,7 @@ def render_chapter(
             norm = _normalize_text(text)
             if norm in anchor_lookup_normalized:
                 canonical_text, lvl = anchor_lookup_normalized[norm]
+                matched_anchors.add(canonical_text)
                 if lvl == 1:
                     continue  # already emitted up front
                 out.append(f"{'#' * lvl} {canonical_text}")
@@ -109,5 +111,10 @@ def render_chapter(
                 rendered = ""
             if rendered.strip():
                 out.append(rendered)
+
+    for text, lvl in anchors:
+        if lvl == 1 or text in matched_anchors:
+            continue
+        print(f"[WARN] {slug}: anchor not found in docx — H{lvl} {text!r}", file=sys.stderr)
 
     return "\n\n".join(out) + "\n"
