@@ -67,6 +67,29 @@ def test_renders_data_table_inline(anchor_md, tmp_path):
     assert "| 1 | 2 |" in result
 
 
+def test_h2_emitted_in_body_position_not_at_top(anchor_md, tmp_path):
+    """H2 anchors must be emitted where they match in the body, not stacked at the top."""
+    md = anchor_md([("Title", 1), ("First Section", 2), ("Second Section", 2)])
+    doc = Document()
+    doc.add_paragraph("intro before any section")
+    doc.add_paragraph("First Section")
+    doc.add_paragraph("body of first")
+    doc.add_paragraph("Second Section")
+    doc.add_paragraph("body of second")
+    body = list(_iter_body_for_test(doc))
+    out_imgs = tmp_path / "imgs"; out_imgs.mkdir()
+    result = render_chapter(body, md, "x", out_imgs)
+    # Order check: title at top, then intro, then first heading, then first body,
+    # then second heading, then second body. The two H2s must NOT be adjacent.
+    lines = [l for l in result.splitlines() if l.strip()]
+    assert lines[0] == "# Title"
+    assert lines[1] == "intro before any section"
+    assert lines[2] == "## First Section"
+    assert lines[3] == "body of first"
+    assert lines[4] == "## Second Section"
+    assert lines[5] == "body of second"
+
+
 def _iter_body_for_test(doc):
     """Mirror slicer's body-iteration so tests can hand a chapter slice to render_chapter."""
     from docx.oxml.ns import qn

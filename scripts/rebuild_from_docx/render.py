@@ -43,15 +43,22 @@ def render_chapter(
     table_index = 0
     out: list[str] = []
 
-    # Emit all anchors from the validated .md as headings up front.
+    # H1 anchors are emitted up front because the slicer strips the chapter-marker
+    # paragraph (`第N部分：...`) from the body. H2/H3 anchors are emitted in place
+    # when a body paragraph's text matches.
     for text, lvl in anchors:
-        out.append(f"{'#' * lvl} {text}")
+        if lvl == 1:
+            out.append(f"{'#' * lvl} {text}")
 
     for el in body_elements:
         if isinstance(el, Paragraph):
             text = el.text.strip()
             if text in anchor_lookup:
-                # Already emitted as a heading above; skip to avoid duplication.
+                lvl = anchor_lookup[text]
+                if lvl == 1:
+                    # Already emitted up front, skip duplicate
+                    continue
+                out.append(f"{'#' * lvl} {text}")
                 continue
             if doc is not None and _has_drawing(el):
                 refs = extract_drawings_from_paragraph(el, doc, images_dir, slug)
