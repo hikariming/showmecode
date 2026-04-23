@@ -7,13 +7,31 @@ export type Stage = {
   partRange: string;
 };
 
+export const stages = [
+  { id: "think",  label: "想清楚", description: "看清需求与边界，建立 AI 协作心法。",     partRange: "第 1-2 篇" },
+  { id: "build",  label: "写出来", description: "从第一个 MVP 到工程化的完整应用。",      partRange: "第 3-7 篇" },
+  { id: "polish", label: "变好看", description: "用专业审美让产品脱离粗糙感。",           partRange: "第 8 篇" },
+  { id: "ship",   label: "发出去", description: "把代码变成所有人都能访问的网站。",       partRange: "第 9 篇" },
+] as const satisfies readonly Stage[];
+
 export type Author = {
   id: string;
   name: string;
   title: string;
   initials: string;
-  partSlugs: string[];
+  partSlugs: readonly string[];
 };
+
+export const authors = [
+  { id: "mingli",   name: "明立",           title: "AI 教育工作者",          initials: "明", partSlugs: ["cognition"] },
+  { id: "yang",     name: "社恐患者杨老师", title: "资深 Agent 开发工程师",   initials: "杨", partSlugs: ["setup"] },
+  { id: "lanxing",  name: "蓝星",           title: "后端开发工程师",          initials: "蓝", partSlugs: ["mvp", "webapp"] },
+  { id: "kafka",    name: "卡夫卡",         title: "移动开发工程师",          initials: "卡", partSlugs: ["engineering", "efficiency", "integration"] },
+  { id: "bay",      name: "Bay",            title: "设计师",                  initials: "B",  partSlugs: ["design"] },
+  { id: "kouzi",    name: "扣子是谁呀",     title: "独立开发者",              initials: "扣", partSlugs: ["launch"] },
+] as const satisfies readonly Author[];
+
+export type AuthorId = (typeof authors)[number]["id"];
 
 export type BookPart = {
   slug: string;
@@ -22,29 +40,13 @@ export type BookPart = {
   fullTitle: string;  // "重塑 AI 编程思维"
   pain: string;
   solution: string;
-  actions: string[];
-  authorId: string;
+  actions: readonly string[];
+  authorId: AuthorId;
   pageCount: number;
   stage: StageId;
 };
 
-export const stages: Stage[] = [
-  { id: "think",  label: "想清楚", description: "看清需求与边界，建立 AI 协作心法。",     partRange: "第 1-2 篇" },
-  { id: "build",  label: "写出来", description: "从第一个 MVP 到工程化的完整应用。",      partRange: "第 3-7 篇" },
-  { id: "polish", label: "变好看", description: "用专业审美让产品脱离粗糙感。",           partRange: "第 8 篇" },
-  { id: "ship",   label: "发出去", description: "把代码变成所有人都能访问的网站。",       partRange: "第 9 篇" },
-];
-
-export const authors: Author[] = [
-  { id: "mingli",   name: "明立",           title: "AI 教育工作者",          initials: "明", partSlugs: ["cognition"] },
-  { id: "yang",     name: "社恐患者杨老师", title: "资深 Agent 开发工程师",   initials: "杨", partSlugs: ["setup"] },
-  { id: "lanxing",  name: "蓝星",           title: "后端开发工程师",          initials: "蓝", partSlugs: ["mvp", "webapp"] },
-  { id: "kafka",    name: "卡夫卡",         title: "移动开发工程师",          initials: "卡", partSlugs: ["engineering", "efficiency", "integration"] },
-  { id: "bay",      name: "Bay",            title: "设计师",                  initials: "B",  partSlugs: ["design"] },
-  { id: "kouzi",    name: "扣子是谁呀",     title: "独立开发者",              initials: "扣", partSlugs: ["launch"] },
-];
-
-export const bookParts: BookPart[] = [
+export const bookParts = [
   {
     slug: "cognition",
     number: 1,
@@ -187,4 +189,4 @@ export const bookParts: BookPart[] = [
     pageCount: 26,
     stage: "ship",
   },
-];
+] as const satisfies readonly BookPart[];
