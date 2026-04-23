@@ -16,8 +16,8 @@ export function Header() {
         new Set(
           navItems
             .map((item) => item.href)
-            .filter((href) => href.startsWith("#"))
-            .map((href) => href.slice(1)),
+            .filter((href) => href.startsWith("#") || href.startsWith("/#"))
+            .map((href) => href.replace(/^\/?#/, "")),
         ),
       ),
     [],
@@ -75,7 +75,8 @@ export function Header() {
 
         <nav className="ml-6 hidden items-center gap-3 lg:flex">
           {navItems.map((item) => {
-            const isActive = item.href === activeHash;
+            const isActive =
+              item.href === activeHash || item.href === `/${activeHash}`;
 
             return (
               <Link
