@@ -13,7 +13,7 @@ export function AboutBook() {
     >
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {authors.map((author) => {
-          const parts = bookParts.filter((p) => author.partSlugs.includes(p.slug));
+          const parts = bookParts.filter((p) => (author.partSlugs as readonly string[]).includes(p.slug));
           return (
             <article
               key={author.id}

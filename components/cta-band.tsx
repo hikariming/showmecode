@@ -13,7 +13,7 @@ export function CtaBand() {
               准备好开始你的第一篇了吗？
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-muted">
-              从认知篇出发，了解 AI 时代'赤脚程序员'到底是怎么思考问题的。
+              从认知篇出发，了解 AI 时代&apos;赤脚程序员&apos;到底是怎么思考问题的。
             </p>
             <Link
               href="/book/cognition"
