@@ -5,3 +5,7 @@ dist
 coverage
 *.log
 
+# mineru raw exports — not source of truth, see data/book/ for curated md
+MinerU_*.md
+MinerU_*.json
+
