@@ -61,13 +61,6 @@ def render_chapter(
     table_index = 0
     out: list[str] = []
 
-    # H1 anchors are emitted up front because the slicer strips the chapter-marker
-    # paragraph (`第N部分：...`) from the body. H2/H3 anchors are emitted in place
-    # when a body paragraph's text matches.
-    for text, lvl in anchors:
-        if lvl == 1:
-            out.append(f"{'#' * lvl} {text}")
-
     for el in body_elements:
         if isinstance(el, Paragraph):
             text = el.text.strip()
@@ -75,8 +68,11 @@ def render_chapter(
             if norm in anchor_lookup_normalized:
                 canonical_text, lvl = anchor_lookup_normalized[norm]
                 matched_anchors.add(canonical_text)
+                # Only emit H2/H3 anchors in-place; H1s from the anchor file are
+                # skipped entirely to avoid circular drift (body content rendered
+                # as H1 markdown gets re-collected as anchors on subsequent runs).
                 if lvl == 1:
-                    continue  # already emitted up front
+                    continue
                 out.append(f"{'#' * lvl} {canonical_text}")
                 continue
             if doc is not None and _has_drawing(el):

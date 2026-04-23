@@ -19,6 +19,9 @@ def anchor_md(tmp_path):
 
 
 def test_emits_anchor_heading_when_paragraph_matches(anchor_md, tmp_path):
+    # H1 anchors are intentionally ignored to prevent circular drift: body content
+    # rendered as H1 markdown gets re-collected as anchors on subsequent runs.
+    # Only H2/H3 anchors are matched and emitted in-place.
     md = anchor_md([("第一部分：A", 1), ("Section X", 2)])
     doc = Document()
     doc.add_paragraph("intro")
@@ -31,7 +34,7 @@ def test_emits_anchor_heading_when_paragraph_matches(anchor_md, tmp_path):
         slug="x",
         images_dir=out_imgs,
     )
-    assert "# 第一部分：A" in result
+    assert "# 第一部分：A" not in result  # H1 anchors are skipped
     assert "## Section X" in result
     assert "intro" in result
     assert "body of section" in result
@@ -68,7 +71,8 @@ def test_renders_data_table_inline(anchor_md, tmp_path):
 
 
 def test_h2_emitted_in_body_position_not_at_top(anchor_md, tmp_path):
-    """H2 anchors must be emitted where they match in the body, not stacked at the top."""
+    """H2 anchors must be emitted where they match in the body, not stacked at the top.
+    H1 anchors are ignored entirely to prevent circular drift on re-runs."""
     md = anchor_md([("Title", 1), ("First Section", 2), ("Second Section", 2)])
     doc = Document()
     doc.add_paragraph("intro before any section")
@@ -79,15 +83,16 @@ def test_h2_emitted_in_body_position_not_at_top(anchor_md, tmp_path):
     body = list(_iter_body_for_test(doc))
     out_imgs = tmp_path / "imgs"; out_imgs.mkdir()
     result = render_chapter(body, md, "x", out_imgs)
-    # Order check: title at top, then intro, then first heading, then first body,
-    # then second heading, then second body. The two H2s must NOT be adjacent.
+    # H1 "Title" anchor is skipped; output starts with body content.
+    # Order: intro, then first heading in-place, body, second heading in-place, body.
+    # The two H2s must NOT be adjacent (body text between them proves in-place emission).
     lines = [l for l in result.splitlines() if l.strip()]
-    assert lines[0] == "# Title"
-    assert lines[1] == "intro before any section"
-    assert lines[2] == "## First Section"
-    assert lines[3] == "body of first"
-    assert lines[4] == "## Second Section"
-    assert lines[5] == "body of second"
+    assert "# Title" not in result  # H1 anchors are skipped
+    assert lines[0] == "intro before any section"
+    assert lines[1] == "## First Section"
+    assert lines[2] == "body of first"
+    assert lines[3] == "## Second Section"
+    assert lines[4] == "body of second"
 
 
 def test_anchor_match_tolerates_whitespace_drift(anchor_md, tmp_path):
