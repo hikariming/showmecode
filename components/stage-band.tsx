@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { ArrowRightIcon } from "@/components/icons";
 import { stages } from "@/data/book";
@@ -45,7 +46,11 @@ export function StageBand() {
                     <span className="mt-1 h-5 w-px bg-brand/18" />
                   </div>
 
-                  <article className="group stage-card relative flex h-full flex-col rounded-[28px] border border-line bg-white/90 px-5 pb-5 pt-5 shadow-[0_22px_60px_rgba(17,39,120,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-brand/36">
+                  <Link
+                    href={stage.href}
+                    aria-label={`阅读${stage.label}阶段：${stage.partRange}`}
+                    className="group stage-card relative flex h-full flex-col rounded-[28px] border border-line bg-white/90 px-5 pb-5 pt-5 shadow-[0_22px_60px_rgba(17,39,120,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-brand/36"
+                  >
                     <div className="flex items-center gap-3">
                       <span className="inline-flex h-11 min-w-11 items-center justify-center rounded-[14px] bg-brand text-[1.02rem] font-semibold text-white shadow-[0_10px_22px_rgba(31,94,255,0.24)]">
                         {String(idx + 1).padStart(2, "0")}
@@ -75,7 +80,7 @@ export function StageBand() {
                     <div className="mt-auto flex justify-end pt-7 text-brand transition duration-300 group-hover:translate-x-1">
                       <ArrowRightIcon className="h-5 w-5" />
                     </div>
-                  </article>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -89,7 +94,11 @@ export function StageBand() {
                 <div key={stage.id} className="relative pl-12">
                   <span className="absolute left-[9px] top-8 h-5 w-5 rounded-full border-2 border-brand bg-white shadow-[0_0_0_4px_rgba(31,94,255,0.14)]" />
 
-                  <article className="stage-card group relative rounded-[26px] border border-line bg-white/92 px-5 pb-5 pt-5 shadow-[0_18px_44px_rgba(17,39,120,0.06)] transition duration-300 hover:border-brand/32">
+                  <Link
+                    href={stage.href}
+                    aria-label={`阅读${stage.label}阶段：${stage.partRange}`}
+                    className="stage-card group relative block rounded-[26px] border border-line bg-white/92 px-5 pb-5 pt-5 shadow-[0_18px_44px_rgba(17,39,120,0.06)] transition duration-300 hover:border-brand/32"
+                  >
                     <div className="flex items-center gap-3">
                       <span className="inline-flex h-10 min-w-10 items-center justify-center rounded-[13px] bg-brand text-sm font-semibold text-white">
                         {String(idx + 1).padStart(2, "0")}
@@ -117,7 +126,7 @@ export function StageBand() {
                     <div className="mt-5 flex justify-end text-brand transition duration-300 group-hover:translate-x-1">
                       <ArrowRightIcon className="h-5 w-5" />
                     </div>
-                  </article>
+                  </Link>
                 </div>
               ))}
             </div>

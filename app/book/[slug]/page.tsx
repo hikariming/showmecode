@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 
+import { BookReader } from "@/components/book-reader";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { MarkdownBody } from "@/components/markdown-body";
 import { PartCover } from "@/components/part-cover";
 import { PartNav } from "@/components/part-nav";
 import { PartToc } from "@/components/part-toc";
@@ -43,7 +43,7 @@ export default async function BookPartPage({ params }: { params: Promise<{ slug:
           <div className="page-shell max-w-4xl">
             <div className="xl:flex xl:gap-8">
               <article className="min-w-0 flex-1">
-                <MarkdownBody>{body}</MarkdownBody>
+                <BookReader>{body}</BookReader>
               </article>
               {showToc ? <PartToc items={toc} /> : null}
             </div>

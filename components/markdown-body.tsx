@@ -12,14 +12,14 @@ export function MarkdownBody({ children }: { children: string }) {
         rehypePlugins={[rehypeSlug]}
         components={{
           h1: ({ children }) => (
-            <h1 className="mt-12 mb-5 text-3xl font-semibold text-foreground">
+            <h1 className="mt-12 mb-5 text-[calc(var(--book-body-font-size,16px)*1.8)] font-semibold text-foreground">
               {children}
             </h1>
           ),
           h2: ({ children, id }) => (
             <h2
               id={id}
-              className="mt-12 mb-4 scroll-mt-24 border-l-4 border-brand/60 pl-4 text-2xl font-semibold text-foreground"
+              className="mt-12 mb-4 scroll-mt-24 border-l-4 border-brand/60 pl-4 text-[calc(var(--book-body-font-size,16px)*1.5)] font-semibold text-foreground"
             >
               {children}
             </h2>
@@ -27,33 +27,33 @@ export function MarkdownBody({ children }: { children: string }) {
           h3: ({ children, id }) => (
             <h3
               id={id}
-              className="mt-8 mb-3 scroll-mt-24 text-lg font-semibold text-foreground"
+              className="mt-8 mb-3 scroll-mt-24 text-[calc(var(--book-body-font-size,16px)*1.125)] font-semibold text-foreground"
             >
               {children}
             </h3>
           ),
           h4: ({ children }) => (
-            <h4 className="mt-6 mb-2 text-base font-semibold text-foreground">
+            <h4 className="mt-6 mb-2 text-[length:var(--book-body-font-size,16px)] font-semibold text-foreground">
               {children}
             </h4>
           ),
           p: ({ children }) => (
-            <p className="mb-5 text-[15px] leading-[1.85] text-foreground/86">
+            <p className="mb-5 text-[length:var(--book-body-font-size,16px)] leading-[1.85] text-foreground/86">
               {children}
             </p>
           ),
           ul: ({ children }) => (
-            <ul className="mb-5 list-disc space-y-2 pl-6 text-foreground/86">
+            <ul className="mb-5 list-disc space-y-2 pl-6 text-[length:var(--book-body-font-size,16px)] leading-[1.85] text-foreground/86">
               {children}
             </ul>
           ),
           ol: ({ children }) => (
-            <ol className="mb-5 list-decimal space-y-2 pl-6 text-foreground/86">
+            <ol className="mb-5 list-decimal space-y-2 pl-6 text-[length:var(--book-body-font-size,16px)] leading-[1.85] text-foreground/86">
               {children}
             </ol>
           ),
           blockquote: ({ children }) => (
-            <blockquote className="my-6 border-l-4 border-brand/60 bg-brand-soft/40 py-2 pl-4 italic text-foreground/86">
+            <blockquote className="my-6 border-l-4 border-brand/60 bg-brand-soft/40 py-2 pl-4 text-[length:var(--book-body-font-size,16px)] italic text-foreground/86">
               {children}
             </blockquote>
           ),
@@ -73,7 +73,7 @@ export function MarkdownBody({ children }: { children: string }) {
             );
           },
           pre: ({ children }) => (
-            <pre className="my-6 overflow-x-auto rounded-2xl bg-slate-900 px-5 py-4 text-sm leading-[1.7] text-slate-100">
+            <pre className="my-6 overflow-x-auto rounded-2xl bg-slate-900 px-5 py-4 text-[calc(var(--book-body-font-size,16px)*0.875)] leading-[1.7] text-slate-100">
               {children}
             </pre>
           ),

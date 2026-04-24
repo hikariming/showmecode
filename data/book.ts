@@ -5,13 +5,14 @@ export type Stage = {
   label: string;
   description: string;
   partRange: string;
+  href: string;
 };
 
 export const stages = [
-  { id: "think",  label: "想清楚", description: "看清需求与边界，建立 AI 协作心法。",     partRange: "第 1-2 篇" },
-  { id: "build",  label: "写出来", description: "从第一个 MVP 到工程化的完整应用。",      partRange: "第 3-7 篇" },
-  { id: "polish", label: "变好看", description: "用专业审美让产品脱离粗糙感。",           partRange: "第 8 篇" },
-  { id: "ship",   label: "发出去", description: "把代码变成所有人都能访问的网站。",       partRange: "第 9 篇" },
+  { id: "think",  label: "想清楚", description: "看清需求与边界，建立 AI 协作心法。",     partRange: "第 1-2 篇", href: "/book/cognition" },
+  { id: "build",  label: "写出来", description: "从第一个 MVP 到工程化的完整应用。",      partRange: "第 3-7 篇", href: "/book/mvp" },
+  { id: "polish", label: "变好看", description: "用专业审美让产品脱离粗糙感。",           partRange: "第 8 篇", href: "/book/design" },
+  { id: "ship",   label: "发出去", description: "把代码变成所有人都能访问的网站。",       partRange: "第 9 篇", href: "/book/launch" },
 ] as const satisfies readonly Stage[];
 
 export type Author = {

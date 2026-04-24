@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 import { ArrowRightIcon } from "@/components/icons";
+import { BookReader } from "@/components/book-reader";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { MarkdownBody } from "@/components/markdown-body";
 import { bookParts } from "@/data/book";
 import { getPartBody } from "@/lib/book-content";
 
@@ -29,7 +29,7 @@ export default function IntroPage() {
               ← 返回首页
             </Link>
             <article className="mt-8 min-w-0">
-              <MarkdownBody>{body}</MarkdownBody>
+              <BookReader>{body}</BookReader>
             </article>
             {first ? (
               <nav className="mt-16 flex flex-col gap-3 border-t border-line pt-8 sm:flex-row sm:items-center sm:justify-end">
