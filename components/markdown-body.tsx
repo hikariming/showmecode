@@ -104,6 +104,20 @@ export function MarkdownBody({ children }: { children: string }) {
           img: ({ src, alt }) => {
             const url = typeof src === "string" ? src : "";
             if (!url) return null;
+            const mediaPath = url.split(/[?#]/)[0]?.toLowerCase() ?? "";
+            if (mediaPath.endsWith(".mp4")) {
+              return (
+                <video
+                  controls
+                  playsInline
+                  preload="metadata"
+                  title={alt ?? ""}
+                  className="my-6 mx-auto block max-w-full rounded-2xl border border-line"
+                >
+                  <source src={url} type="video/mp4" />
+                </video>
+              );
+            }
             return (
               <Image
                 src={url}
