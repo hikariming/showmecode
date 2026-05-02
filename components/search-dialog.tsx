@@ -164,11 +164,6 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
 
   const terms = useMemo(() => tokenize(trimmed), [trimmed]);
 
-  // Reset active row when query changes; clamp when results shrink.
-  useEffect(() => {
-    setActive(0);
-  }, [trimmed]);
-
   // Focus + body scroll lock + ESC handling while open.
   useEffect(() => {
     if (!open) return;
@@ -199,6 +194,7 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
   const handleNavigate = () => {
     onClose();
     setQuery("");
+    setActive(0);
   };
 
   const hrefFor = (hit: Hit) =>
@@ -221,7 +217,10 @@ export function SearchDialog({ open, onClose }: { open: boolean; onClose: () => 
           <input
             ref={inputRef}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setActive(0);
+            }}
             onKeyDown={(e) => {
               if (e.key === "ArrowDown") {
                 e.preventDefault();
