@@ -10,6 +10,7 @@
     "build:search-index": "node scripts/build-search-index.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "github-slugger": "^2.0.0",
     "minisearch": "^7.2.0",
     "next": "latest",
